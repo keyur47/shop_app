@@ -15,15 +15,16 @@ class Add extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(children: [
+      body: Column(
+          children: [
         Container(
           color: Colors.blue,
           height: 85,
-          child: Stack(
-            alignment: Alignment.bottomRight,
+          child:  Stack(
+            alignment: Alignment.bottomLeft,
             children: [
               Obx(
-                () => TextFormField(
+                    () => TextFormField(
                   readOnly: true,
                   keyboardType: TextInputType.text,
                   onTap: () async {
@@ -31,7 +32,8 @@ class Add extends StatelessWidget {
                   },
                   textAlign: TextAlign.right,
                   decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.only(left: 12, right: 18),
+                    contentPadding:
+                    const EdgeInsets.only(left: 12, right: 18),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none),
@@ -41,13 +43,24 @@ class Add extends StatelessWidget {
                     border: InputBorder.none,
                     filled: true,
                     fillColor: Colors.blue,
+                    hintStyle: const TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.w700),
+                    // ignore: unnecessary_null_comparison
                     hintText: homeController.selectedDate.value != null
                         ? DateFormat('yyyy-MM-dd')
-                            .format(homeController.selectedDate.value)
+                        .format(homeController.selectedDate.value)
                         : homeController.isDate(),
                   ),
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 13, left: 15),
+                child: GestureDetector(
+                    onTap: (){
+                      Get.back();
+                    },
+                    child: Icon(Icons.arrow_back,color: Colors.white,)),
               )
+
             ],
           ),
         ),
@@ -59,13 +72,13 @@ class Add extends StatelessWidget {
         ),
         customTextField(
           name: "Product name",
-          controller: homeController.productNameController,
+          controller: homeController.productController,
           focusedBorder:
               OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
         customTextField(
-          name: "Price",
-          controller: homeController.priceController,
+          name: "Quantity",
+          controller: homeController.quantityController,
           focusedBorder:
               OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           textInputType: TextInputType.number,
@@ -74,8 +87,8 @@ class Add extends StatelessWidget {
           ],
         ),
         customTextField(
-          name: "Quantity",
-          controller: homeController.quantityController,
+          name: "Price",
+          controller: homeController.priceController,
           focusedBorder:
               OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           textInputType: TextInputType.number,
@@ -94,13 +107,13 @@ class Add extends StatelessWidget {
                   onTap: () async {
                     if (homeController.data.value.isNotEmpty) {
                       var index = homeController.data.indexWhere((p0) =>
-                          homeController.nameController.text == p0.name);
+                          homeController.productController.text == p0.products);
                       log('index  $index');
                       if (index != -1) {
-                        var index = homeController.data.indexWhere((p0) => homeController.nameController.text == p0.name);
+                        var index = homeController.data.indexWhere((p0) => homeController.productController.text == p0.products);
                         homeController.data[index].price = (homeController.data[index].price ?? 0) + int.parse(homeController.priceController.text);
                         homeController.data[index].quantity = (homeController.data[index].quantity ?? 0) + int.parse(homeController.quantityController.text);
-                        homeController.updateSP(index: index,name: homeController.data[index].name.toString(),price: int.parse(homeController.data[index].price.toString()),quantity: (homeController.data[index].quantity ?? 0));
+                        homeController.updateSP(index: index,name: (homeController.data[index].name.toString()),products: homeController.data[index].products.toString(),price: int.parse(homeController.data[index].price.toString()),quantity: (homeController.data[index].quantity ?? 0));
                         homeController.clearController();
                         Get.back();
                         log("index--:$index");

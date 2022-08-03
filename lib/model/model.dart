@@ -30,20 +30,20 @@ class UserData {
 }
 
 class Data {
+  String? products;
   String? name;
-  String? product;
   int? price;
   int? quantity;
   int? total;
   String? time;
   String? isDate;
 
-  Data({this.name, this.time, this.isDate,this.price,this.quantity,this.total,this.product});
+  Data({this.products, this.time, this.isDate,this.price,this.quantity,this.total,this.name});
 
   factory Data.fromJson(Map<String, dynamic> json){
     return Data(
+      products: json["products"],
       name: json["name"],
-      product: json["product"],
       price: json["price"],
       quantity: json["quantity"],
       total: json["total"],
@@ -55,8 +55,8 @@ class Data {
 
   Map<String, dynamic> toJson() {
     return {
+      "products": products,
       "name": name,
-      "product": product,
       "price": price,
       "quantity": quantity,
       "total": total,

@@ -1,15 +1,13 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
-
   static late SharedPreferences _prefs;
 
   static Future initMySharedPreferences() async {
     _prefs = await SharedPreferences.getInstance();
   }
 
-
-  static Future setInt( int value) async {
+  static Future setInt(int value) async {
     await _prefs.setInt("onbording", value);
   }
 
@@ -17,7 +15,6 @@ class SharedPrefs {
     final int? value = _prefs.getInt("onbording");
     return value;
   }
-
 
   static Future setString(String key, String value) async {
     await _prefs.setString(key, value);
@@ -27,9 +24,6 @@ class SharedPrefs {
     final String? value = _prefs.getString(key);
     return value ?? "";
   }
-
-
-
 
   static final Future<SharedPreferences> prefsData =
       SharedPreferences.getInstance();
@@ -44,8 +38,7 @@ class SharedPrefs {
     return prefs.getStringList("numberList");
   }
 
-
-  static  setPage(int page) async {
+  static setPage(int page) async {
     final SharedPreferences prefs = await prefsData;
     return prefs.setInt("page", page);
   }
@@ -54,20 +47,6 @@ class SharedPrefs {
     final SharedPreferences prefs = await prefsData;
     return prefs.getInt("page") ?? 0;
   }
-
-
-
-
-
-  // static Future<bool> setSaveUserData(bool value) async {
-  //   final SharedPreferences prefs = await prefsData;
-  //   return await prefs.setBool('flag', value);
-  // }
-  //
-  // static Future getSaveUserData() async {
-  //   final SharedPreferences prefs = await prefsData;
-  //   prefs.getBool("flag") ?? false;
-  // }
 
   static Future<void> remove() async {
     final SharedPreferences prefs = await prefsData;

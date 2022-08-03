@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shop_app/quantity._screen.dart';
-
 import 'helper/shared_preferences.dart';
 
 void main() async {

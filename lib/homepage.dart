@@ -1,38 +1,45 @@
-import 'dart:convert';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shop_app/controller/controller.dart';
-
 import 'add.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  HomeController controller = Get.put(HomeController());
+  HomeController homeController = Get.put(HomeController());
 
-  // double get totalCost {
-  //   double total = 0;
-  //   for (var item in controller.data) {
-  //     total += int.parse(item.price.toString()) * int.parse(item.quantity.toString());
-  //     print("total:- ${double.parse(item.total.toString())}");
-  //     print("total1:- ${total}");
-  //   }
-  //   return total;
-  // }
-
-@override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+  ///totalCost
+  double get totalCost {
+    double total = 0;
+    for (var item in homeController.data) {
+      total += double.parse(item.price.toString())* double.parse(item.quantity.toString());
+    }
+    return total;
   }
+
+
+  ///selectedDate
+  DateTime selectedDate = DateTime.now();
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +58,11 @@ class _HomePageState extends State<HomePage> {
               child: Stack(
                 alignment: Alignment.bottomLeft,
                 children: [
-                  Obx(
-                    () => TextFormField(
+                  TextFormField(
                       readOnly: true,
                       keyboardType: TextInputType.text,
                       onTap: () async {
-                        controller.presentDatePicker(context);
+                        _selectDate(context);
                       },
                       textAlign: TextAlign.right,
                       decoration: InputDecoration(
@@ -71,59 +77,99 @@ class _HomePageState extends State<HomePage> {
                         border: InputBorder.none,
                         filled: true,
                         fillColor: Colors.blue,
-                        hintText: controller.selectedDate.value != null
+                        hintStyle: const TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.w700),
+                        // ignore: unnecessary_null_comparison
+                        hintText: selectedDate != null
                             ? DateFormat('yyyy-MM-dd')
-                                .format(controller.selectedDate.value)
-                            : controller.isDate(),
+                                .format(selectedDate)
+                            : homeController.isDate(),
                       ),
                     ),
-                  ),
-                  // Obx(()=>
-                  //    Padding(
-                  //     padding: const EdgeInsets.only(bottom: 5, left: 10),
-                  //     child: Container(
-                  //       decoration: BoxDecoration(
-                  //           color: Colors.red,
-                  //           borderRadius: BorderRadius.circular(10)),
-                  //       child: Padding(
-                  //         padding: const EdgeInsets.all(8.0),
-                  //         child: Text("Total:- ${totalCost}",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w400,fontSize: 18),),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // )
+                   Padding(
+                    padding: const EdgeInsets.only(bottom: 13, left: 15),
+                    child: GestureDetector(
+                        onTap: (){
+                          Get.back();
+                        },
+                        child: const Icon(Icons.arrow_back,color: Colors.white,)),
+                  )
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 25, top: 10, bottom: 10),
+              padding: const EdgeInsets.only(left: 10,right: 10, top: 10, bottom: 10),
               child: Table(
+                  border: TableBorder.all(
+                      color: Colors.black,
+                      style: BorderStyle.solid,
+                      width: 2),
                   // border:TableBorder.all(width: 1.0,color: Colors.grey),
-                  children: const [
+                  children:  [
                     TableRow(children: [
-                      Text(
-                        "Date",
-                        style:
-                            TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.start,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          children: const [
+                            Text(
+                              "Date",
+                              style:
+                                  TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
                       ),
-                      Text(
-                        "Name",
-                        style:
-                            TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.start,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          children: const [
+                            Text(
+                              "Name",
+                              style:
+                                  TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
                       ),
-                      Text(
-                        "Total",
-                        style:
-                            TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.start,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          children: const [
+                            Text(
+                              "Product",
+                              style:
+                                  TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
                       ),
-                      Text(
-                        "Delete",
-                        style:
-                            TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.start,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          children: const [
+                            Text(
+                              "Total",
+                              style:
+                                  TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          children: const [
+                            Text(
+                              "Delete",
+                              style:
+                                  TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
                       ),
                     ]),
                   ]),
@@ -132,59 +178,102 @@ class _HomePageState extends State<HomePage> {
               child: Obx(
                 () => ListView.builder(
                   padding: EdgeInsets.zero,
-                  itemCount: controller.data.length,
+                  itemCount: homeController.data.length,
                   itemBuilder: (context, index) {
-                    final data = controller.data[index];
-                    return DateFormat('yyyy-MM-dd').format(controller.selectedDate.value) ==
-                            controller.data[index].isDate
+                    final data = homeController.data[index];
+                    return DateFormat('yyyy-MM-dd').format(selectedDate) ==
+                            homeController.data[index].isDate
                         ? Padding(
                             padding:
-                                const EdgeInsets.only(left: 25, top: 10, bottom: 10),
+                                const EdgeInsets.only(left: 10,right: 10, bottom: 5),
                             child: Table(
+                              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                              border: TableBorder.all(
+                                  color: Colors.black,
+                                  style: BorderStyle.solid,
+                                  width: 2),
                               children: [
-                                TableRow(children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                TableRow(
                                     children: [
-                                      Text(
-                                        data.isDate ?? " ",
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          data.isDate ?? " ",
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                        Text(
+                                          data.time ?? " ",
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(data.name??"",
-                                        // "${data.name?.substring(0, 1).toUpperCase()}${data.name?.substring(1).toLowerCase()}",
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 6),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          //data.name??"",
+                                           "${data.name?.substring(0, 1).toUpperCase()}${data.name?.substring(1).toLowerCase()}",
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 16),
+
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "${double.parse(data.price.toString())* double.parse(data.quantity.toString())}",
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 6),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          //data.products??"",
+                                           "${data.products?.substring(0, 1).toUpperCase()}${data.products?.substring(1).toLowerCase()}",
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 16),
+
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 6),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "${double.parse(data.price.toString())* double.parse(data.quantity.toString())}",
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 16,color: Colors.red),
+
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   GestureDetector(
                                       onTap: () async {
-                                        controller.data.removeAt(index);
-                                        // SharedPrefs.setString("chatModal", json.encode(controller.data));
-                                        await controller.setPref();
+                                        homeController.data.removeAt(index);
+                                        await homeController.setPref();
                                       },
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: const [
-                                          Icon(
-                                            Icons.delete,
-                                            size: 22,
-                                          ),
-                                        ],
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 3),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: const [
+                                            Icon(
+                                              Icons.delete,
+                                              size: 22,
+                                            ),
+                                          ],
+                                        ),
                                       ))
                                 ])
                               ],
@@ -195,6 +284,21 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            Align(
+                alignment: Alignment.bottomLeft,
+                child:  Padding(
+                  padding:  const EdgeInsets.only(bottom: 20,left: 20),
+                  child: Container(
+                      decoration: BoxDecoration(
+                      color: Colors.red,
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text("\$ ${totalCost.toString()}",style: const TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.w700),),
+                      )),
+                )),
+
           ],
         ),
     );
